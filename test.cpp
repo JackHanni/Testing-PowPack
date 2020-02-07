@@ -14,8 +14,8 @@ int main() {
    return 0;
 }
 
-// this needs to be declared above main to work maybe...... h aha ha ha ahah aha hah ah ah ha hah a
 // Fixed!
+// I like it
 int add(int a, int b) {
 	return a+b;
 }
