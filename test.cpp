@@ -10,11 +10,12 @@ int main() {
    cout << " ewwww lala !!!!\n\n";
    int deesballs = 52;
    cout << deesballs << "\n\n";
+
    return 0;
 }
 
 // this needs to be declared above main to work maybe...... h aha ha ha ahah aha hah ah ah ha hah a
 // Fixed!
-int add(int a,int b) {
+int add(int a, int b) {
 	return a+b;
 }
