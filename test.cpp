@@ -10,7 +10,7 @@ int main()
    cout << dees-balls << "\n\n";
    return 0;
 }
-
+// this needs to be declared above main to work maybe...... h aha ha ha ahah aha hah ah ah ha hah a 
 int add(int a,int b)
 {
 	return a+b;
