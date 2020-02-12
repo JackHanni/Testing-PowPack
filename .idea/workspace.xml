@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
-    <generated />
+    <generated>
+      <config projectName="Testing-PowPack" targetName="Testing-PowPack" />
+    </generated>
   </component>
   <component name="CMakeSettings">
     <configurations>
@@ -9,7 +11,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6a0adda8-1c23-4e20-a88c-02dd7b430056" name="Default Changelist" comment="" />
+    <list default="true" id="6a0adda8-1c23-4e20-a88c-02dd7b430056" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spheres/sphere.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/spheres/sphere.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +23,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -38,6 +44,13 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
+  <component name="RunManager">
+    <configuration name="Testing-PowPack" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Testing-PowPack" TARGET_NAME="Testing-PowPack" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Testing-PowPack" RUN_TARGET_NAME="Testing-PowPack">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -49,6 +62,7 @@
       <option name="presentableId" value="Default" />
       <updated>1581051933761</updated>
       <workItem from="1581051936142" duration="2124000" />
+      <workItem from="1581528121236" duration="918000" />
     </task>
     <servers />
   </component>
@@ -56,33 +70,38 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581053213446">
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581528583294">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1581053213446" />
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1581055626202">
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1581528583294" />
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1581056393620">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1581055626202" />
-    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1581055626200">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1581056393620" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1581056393619">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1581055626200" />
-    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1581055626199">
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1581056393619" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1581056393619">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1581055626199" />
-    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1581055626201">
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1581056393619" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1581056393620">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1581055626201" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1581056393620" />
     <state x="221" y="89" key="SettingsEditor" timestamp="1581052385437">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1581052385437" />
-    <state x="397" y="257" key="com.intellij.ide.util.TipDialog" timestamp="1581051941779">
-      <screen x="0" y="23" width="1440" height="804" />
+    <state x="397" y="262" key="com.intellij.ide.util.TipDialog" timestamp="1581528129387">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="397" y="262" key="com.intellij.ide.util.TipDialog/0.0.1440.900@0.0.1440.900" timestamp="1581528129387" />
     <state x="397" y="257" key="com.intellij.ide.util.TipDialog/0.23.1440.804@0.23.1440.804" timestamp="1581051941779" />
+    <state x="301" y="37" width="837" height="825" key="find.popup" timestamp="1581056105552">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="301" y="37" width="837" height="825" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1581056105552" />
   </component>
 </project>

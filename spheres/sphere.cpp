@@ -1,7 +1,7 @@
 #include "sphere.h"
 #include <math.h>
 float Sphere::density = 5;
-float Sphere :: calculateVolume();
+float Sphere :: calculateVolume();  // what are you trying to do here?
 int main()
 {
    Sphere a;
