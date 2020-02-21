@@ -21,6 +21,7 @@ class Sphere
       float mass;
    public:
       float calculateVolume();
+      bool isTouching();
 };
 
 #endif

@@ -34,6 +34,15 @@ public:
   void moveDown() {if (y > dy) y -= dy;}
 };
 
+struct Point
+{
+   double x;
+   double y;
+   double z;
+};
+
+
+
 // A ball.  A ball has a radius, a color, and bounces up and down between
 // a maximum height and the xz plane.  Therefore its x and z coordinates
 // are fixed.  It uses a lame bouncing algorithm, simply moving up or
@@ -42,25 +51,52 @@ class Ball {
   double radius;
   GLfloat* color;
   double maximumHeight;
-  double x;
-  double y;
-  double z;
-  int direction;
+  Point p;
+  double velocity;
+  double acc;
+  double dt;
 public:
   Ball(double r, GLfloat* c, double h, double x, double z):
-      radius(r), color(c), maximumHeight(h), direction(-1),
-      y(h), x(x), z(z) {
+      radius(r), color(c) {
+      acc = -1.0;
+      dt = 0.05;
+      p.x = x;
+      p.y = h;
+      p.z = z;
+  }
+  double get_radius()
+  {
+     return radius;
+  }
+  Point get_point()
+  {
+     return p;
+  }
+  bool touching(Ball ball2)
+  {
+     double x_diff = ball2.get_point().x;
+     double y_diff = ball2.get_point().y;
+     double z_diff = ball2.get_point().y;
+     double h = sqrt(x_diff*x_diff+y_diff*y_diff+z_diff*z_diff);
+     if(h <= radius + ball2.get_radius())
+     {
+        return true;
+     }
+     else
+     {
+        return false;
+     }
   }
   void update() {
-    y += direction * 0.05;
-    if (y > maximumHeight) {
-      y = maximumHeight; direction = -1;
-    } else if (y < radius) {
-      y = radius; direction = 1;
+    velocity += acc * dt;
+    p.y += velocity * dt;
+    if (p.y - radius < 0) {
+       p.y = radius;
+       velocity *= -.8;
     }
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-    glTranslated(x, y, z);
+    glTranslated(p.x, p.y, p.z);
     glutSolidSphere(radius, 30, 30);
     glPopMatrix();
   }
