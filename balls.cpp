@@ -9,6 +9,7 @@
 #include <GL/glut.h>
 #endif
 #include <cmath>
+#include <vector>
 
 // Colors
 GLfloat WHITE[] = {1, 1, 1};
@@ -87,7 +88,9 @@ public:
         return false;
      }
   }
-  void update() {
+  void update(Vector<Ball> balls) {
+    if (touching(ball2))
+      acc = -0.5;
     velocity += acc * dt;
     p.y += velocity * dt;
     if (p.y - radius < 0) {
@@ -143,10 +146,10 @@ public:
 // Global variables: a camera, a checkerboard and some balls.
 Checkerboard checkerboard(8, 8);
 Camera camera;
-Ball balls[] = {
-  Ball(1, GREEN, 7, 6, 1),
-  Ball(1.5, MAGENTA, 6, 3, 4),
-  Ball(0.4, WHITE, 5, 1, 7)
+Vector<Ball> balls = Vector<Balls>();
+balls.push(Ball(1, GREEN, 6, 3, 8));
+balls.push(Ball(1.5, MAGENTA, 6, 3, 2));
+balls.push(Ball(0.4, WHITE, 5, 1, 7));
 };
 
 
