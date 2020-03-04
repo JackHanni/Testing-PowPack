@@ -7,3 +7,4 @@ cmake-build-debug/
 llvm-9.0.1.src/
 .DS_Store
 packingBalls/
+.clang-format
