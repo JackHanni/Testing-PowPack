@@ -1,40 +1,65 @@
-LFLAGS = -lGL -lGLU -lglut -lm
+###############################################################
+# Program:
+#     Project 07, Moon Lander
+#     Brother Cook, CS165
+# Author:
+#     Kevin Foniciello
+# Summary:
+#     This game will only display all the elements to it.
+#     Nothing more, nothing less. 
+# Above and Beyond
+#     When you submit your final project (not for milestones),
+#     list anything here that you did to go above and beyond
+#     the base requirements for your project.
+###############################################################
 
-a.out: balls.o Point.o Camera.o
-	g++ balls.o Point.o Camera.o $(LFLAGS)
 
-balls.o: balls.cpp
-	g++ -c balls.cpp $(LFLAGS)
+LFLAGS = -lglut -lGLU -lGL
 
-Camera.o: Camera.cpp
-	g++ -c Camera.cpp $(LFLAGS)
+###############################################################
+# Build the main Moon Lander game
+###############################################################
+a.out: driver.o ground.o game.o uiInteract.o uiDraw.o point.o lander.o velocity.o
+	g++ driver.o ground.o game.o uiInteract.o uiDraw.o point.o lander.o velocity.o $(LFLAGS)
+	tar -j -cf moonLander.tar makefile *.h *.cpp
 
-Point.o: Point.cpp
-	g++ -c Point.cpp
+###############################################################
+# Individual files
+#    uiDraw.o      Draw polygons on the screen and do all OpenGL graphics
+#    uiInteract.o  Handles input events
+#    point.o       The position on the screen
+#    ground.o      Handles the ground / world
+#    game.o        Handles the game interaction
+###############################################################
+uiDraw.o: uiDraw.cpp uiDraw.h
+	g++ -c uiDraw.cpp
 
-Ball.o: Ball.cpp
-	g++ -c Ball.cpp
+uiInteract.o: uiInteract.cpp uiInteract.h
+	g++ -c uiInteract.cpp
 
+point.o: point.cpp point.h
+	g++ -c point.cpp
+
+ground.o: ground.cpp ground.h
+	g++ -c ground.cpp
+
+game.o: game.h game.cpp uiDraw.h uiInteract.h point.h ground.h
+	g++ -c game.cpp
+
+driver.o: driver.cpp game.h uiInteract.h
+	g++ -c driver.cpp
+
+#######################################################################
+# ADD YOUR ADDITIONAL RULES HERE!
+#######################################################################
+lander.o : lander.cpp lander.h
+	g++ -c lander.cpp
+
+velocity.o : velocity.cpp velocity.h
+	g++ -c velocity.cpp
+
+###############################################################
+# General rules
+###############################################################
 clean:
-	rm a.out *.o
-
-# a.out: driver.o Ball.o Point.o Checkerboard.o Camera.o
-# 	g++ driver.o Ball.o Point.o Checkerboard.o Camera.o $(LFLAGS)
-#
-# driver.o: driver.cpp
-# 	g++ -c driver.cpp $(LFLAGS)
-#
-# Ball.o: Ball.cpp
-# 	g++ -c Ball.cpp $(LFLAGS)
-#
-# Point.o: Point.cpp
-# 	g++ -c Point.cpp
-#
-# Checkerboard.o: Checkerboard.cpp
-# 	g++ -c Checkerboard.cpp $(LFLAGS)
-#
-# Camera.o: Camera.cpp
-# 	g++ -c Camera.cpp $(LFLAGS)
-#
-# clean:
-# 	rm a.out *.o
+	rm a.out *.o *.tar
