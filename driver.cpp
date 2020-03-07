@@ -1,17 +1,15 @@
 /*****************************************************
  * File: Driver.cpp
- * Author: Br. Burton
+ * Author: Kevin Foniciello
  *
  * Description: This file contains the main function
- *  that starts the game and the callback function
- *  that specifies what methods of the game class are
- *  called each time through the game loop.
+ *  that starts the simulation and the callback function
+ *  that specifies what methods of the simulation class are
+ *  called each time through the simulation loop.
  ******************************************************/
-#define CRASH_FLAMES
 
-#include "game.h"
+#include "simulation.h"
 #include "uiInteract.h"
-#include "lander.h"
 
 /*************************************
  * All the interesting work happens here, when
@@ -20,29 +18,30 @@
  * engine will wait until the proper amount of
  * time has passed and put the drawing on the screen.
  **************************************/
-void callBack(const Interface *pUI, void *p)
+void
+callBack(const Interface * pUI, void * p)
 {
-   Game *pGame = (Game *)p;
-   
-   pGame->advance();
-   pGame->handleInput(*pUI);
-   pGame->draw(*pUI);
-}
+  Simulation * pSimulation = (Simulation *)p;
 
+  pSimulation->advance();
+  pSimulation->handleInput(*pUI);
+  pSimulation->draw(*pUI);
+}
 
 /*********************************
  * Main is pretty sparse.  Just initialize
- * the game and call the display engine.
+ * the simulation and call the display engine.
  * That is all!
  *********************************/
-int main(int argc, char ** argv)
+int
+main(int argc, char ** argv)
 {
-   Point topLeft(-200, 200);
-   Point bottomRight(200, -200);
-   
-   Interface ui(argc, argv, "Moon Lander", topLeft, bottomRight);
-   Game game(topLeft, bottomRight);
-   ui.run(callBack, &game);
+  Point topLeft(-400, 300);
+  Point bottomRight(400, -300);
 
-   return 0;
+  Interface ui(argc, argv, "Powder Packing", topLeft, bottomRight);
+  Simulation simulation(topLeft, bottomRight);
+  ui.run(callBack, &simulation);
+
+  return 0;
 }

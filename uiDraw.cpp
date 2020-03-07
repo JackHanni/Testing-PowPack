@@ -2,7 +2,7 @@
  * Source File:
  *    User Interface Draw : put pixels on the screen
  * Author:
- *    Br. Helfrich
+ *    Kevin Foniciello
  * Summary:
  *    This is the code necessary to draw on the screen. We have a collection
  *    of procedural functions here because each draw function does not
@@ -13,16 +13,18 @@
 #include <string>     // need you ask?
 #include <sstream>    // convert an integer into text
 #include <cassert>    // I feel the need... the need for asserts
-#include <time.h>     // for clock
+//#include <time.h>     // for clock
 
 
 #ifdef __APPLE__
-#include <openGL/gl.h>    // Main OpenGL library
+//#include <openGL/gl.h>    // Main OpenGL library
 #include <GLUT/glut.h>    // Second OpenGL library
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif // __APPLE__
 
 #ifdef __linux__
-#include <GL/gl.h>        // Main OpenGL library
+//#include <GL/gl.h>        // Main OpenGL library
 #include <GL/glut.h>      // Second OpenGL library
 #endif // __linux__
 
@@ -39,13 +41,11 @@
 
 using namespace std;
 
-#define deg2rad(value) ((M_PI / 180) * (value))
-
 /*********************************************
  * NUMBER OUTLINES
  * We are drawing the text for score and things
  * like that by hand to make it look "old school."
- * These are how we render each individual charactger.
+ * These are how we render each individual character.
  * Note how -1 indicates "done".  These are paired
  * coordinates where the even are the x and the odd
  * are the y and every 2 pairs represents a point
@@ -63,6 +63,52 @@ const char NUMBER_OUTLINES[10][20] =
   {0, 0,  7, 0,   0, 5,  7, 5,   0,10,  7,10,   0, 0,  0,10,   7, 0,  7,10},//8
   {0, 0,  7, 0,   7, 0,  7,10,   0, 0,  0, 5,   0, 5,  7, 5,  -1,-1, -1,-1} //9
 };
+
+int generateGlList(int range) { return glGenLists(range); }
+
+void positionCamera(double x, double y, double z, double centerX, float smtg, double centerZ, float upX, float upY, float upZ) {
+  gluLookAt(x, y, z, centerX, smtg, centerZ, upX, upY, upZ);
+}
+
+void drawSphere(const Point & centerPt, double radius)
+{
+  GLfloat MAGENTA[] = {1, 0, 1};
+  glPushMatrix();
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, MAGENTA);
+  glTranslated(centerPt.getX(), centerPt.getY(), centerPt.getZ());
+  glutSolidSphere(radius, 30, 30);
+  glPopMatrix();
+}
+
+void createCheckerboard(const int width, const int depth, int displayListId)
+{
+  GLfloat WHITE[] = {1, 1, 1};
+  GLfloat RED[] = {1, 0, 0};
+  glNewList(displayListId, GL_COMPILE);
+  GLfloat lightPosition[] = {4, 3, 7, 1};
+  glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+  glBegin(GL_QUADS);
+  glNormal3d(0, 1, 0);
+  for (int x = 0; x < width - 1; x++)
+  {
+    for (int z = 0; z < depth - 1; z++)
+    {
+      glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (x + z) % 2 == 0 ? RED : WHITE);
+      glVertex3d(x, 0, z);
+      glVertex3d(x + 1, 0, z);
+      glVertex3d(x + 1, 0, z + 1);
+      glVertex3d(x, 0, z + 1);
+    }
+  }
+  glEnd();
+  glEndList();
+}
+
+void drawCheckerboard(int displayListId)
+{
+  glCallList(displayListId);
+}
+
 
 /************************************************************************
  * DRAW DIGIT
@@ -158,67 +204,6 @@ void drawText(const Point & topLeft, const char * text)
    // loop through the text
    for (const char *p = text; *p; p++)
       glutBitmapCharacter(pFont, *p);
-}
-
-/************************************************************************
- * DRAW POLYGON
- * Draw a POLYGON from a given location (center) of a given size (radius).
- *  INPUT   center   Center of the polygon
- *          radius   Size of the polygon
- *          points   How many points will we draw it.  Larger the number,
- *                   the more line segments we will use
- *          rotation True circles are rotation independent.  However, if you
- *                   are drawing a 3-sided polygon (triangle), this matters!
- *************************************************************************/
-void drawPolygon(const Point & center, int radius, int points, int rotation)
-{
-   // begin drawing
-   glBegin(GL_LINE_LOOP);
-
-   //loop around a circle the given number of times drawing a line from
-   //one point to the next
-   for (double i = 0; i < 2 * M_PI; i += (2 * M_PI) / points)
-   {
-      Point temp(false /*check*/);
-      temp.setX(center.getX() + (radius * cos(i)));
-      temp.setY(center.getY() + (radius * sin(i)));
-      rotate(temp, center, rotation);
-      glVertex2f(temp.getX(), temp.getY());
-   }
-
-   // complete drawing
-   glEnd();
-
-}
-
-
-/************************************************************************
- * ROTATE
- * Rotate a given point (point) around a given origin (center) by a given
- * number of degrees (angle).
- *    INPUT  point    The point to be moved
- *           center   The center point we will rotate around
- *           rotation Rotation in degrees
- *    OUTPUT point    The new position
- *************************************************************************/
-void rotate(Point & point, const Point & origin, int rotation)
-{
-   // because sine and cosine are expensive, we want to call them only once
-   double cosA = cos(deg2rad(rotation));
-   double sinA = sin(deg2rad(rotation));
-
-   // remember our original point
-   Point tmp(false /*check*/);
-   tmp.setX(point.getX() - origin.getX());
-   tmp.setY(point.getY() - origin.getY());
-
-   // find the new values
-   point.setX(static_cast<int> (tmp.getX() * cosA -
-                                tmp.getY() * sinA) +
-              origin.getX());
-   point.setY(static_cast<int> (tmp.getX() * sinA +
-                                tmp.getY() * cosA) +
-              origin.getY());
 }
 
 /************************************************************************
@@ -390,323 +375,4 @@ double random(double min, double max)
    return num;
 }
 
-
-/************************************************************************
- * DRAW RECTANGLE
- * Draw a rectangle on the screen centered on a given point (center) of
- * a given size (width, height), and at a given orientation (rotation)
- *  INPUT  center    Center of the rectangle
- *         width     Horizontal size
- *         height    Vertical size
- *         rotation  Orientation
- *************************************************************************/
-void drawRect(const Point & center, int width, int height, int rotation)
-{
-   Point tl(false /*check*/); // top left
-   Point tr(false /*check*/); // top right 
-   Point bl(false /*check*/); // bottom left
-   Point br(false /*check*/); // bottom right
-
-   //Top Left point
-   tl.setX(center.getX() - (width  / 2));
-   tl.setY(center.getY() + (height / 2));
-
-   //Top right point
-   tr.setX(center.getX() + (width  / 2));
-   tr.setY(center.getY() + (height / 2));
-
-   //Bottom left point
-   bl.setX(center.getX() - (width  / 2));
-   bl.setY(center.getY() - (height / 2));
-
-   //Bottom right point
-   br.setX(center.getX() + (width  / 2));
-   br.setY(center.getY() - (height / 2));
-
-   //Rotate all points the given degrees
-   rotate(tl, center, rotation);
-   rotate(tr, center, rotation);
-   rotate(bl, center, rotation);
-   rotate(br, center, rotation);
-
-   //Finally draw the rectangle
-   glBegin(GL_LINE_STRIP);
-   glVertex2f(tl.getX(), tl.getY());
-   glVertex2f(tr.getX(), tr.getY());
-   glVertex2f(br.getX(), br.getY());
-   glVertex2f(bl.getX(), bl.getY());
-   glVertex2f(tl.getX(), tl.getY());
-   glEnd();
-}
-
-/************************************************************************
- * DRAW CIRCLE
- * Draw a circle from a given location (center) of a given size (radius).
- *  INPUT   center   Center of the circle
- *          radius   Size of the circle
- *************************************************************************/
-void drawCircle(const Point & center, int radius)
-{
-   assert(radius > 1.0);
-   const double increment = 1.0 / (double)radius;
-
-   // begin drawing
-   glBegin(GL_LINE_LOOP);
-
-   // go around the circle
-   for (double radians = 0; radians < M_PI * 2.0; radians += increment)
-      glVertex2f(center.getX() + (radius * cos(radians)),
-                 center.getY() + (radius * sin(radians)));
-   
-   // complete drawing
-   glEnd();   
-}
-
-/************************************************************************
- * DRAW DOT
- * Draw a single point on the screen, 2 pixels by 2 pixels
- *  INPUT point   The position of the dow
- *************************************************************************/
-void drawDot(const Point & point)
-{
-   // Get ready, get set...
-   glBegin(GL_POINTS);
-
-   // Go...
-   glVertex2f(point.getX(),     point.getY()    );
-   glVertex2f(point.getX() + 1, point.getY()    );
-   glVertex2f(point.getX() + 1, point.getY() + 1);
-   glVertex2f(point.getX(),     point.getY() + 1);
-
-   // Done!  OK, that was a bit too dramatic
-   glEnd();
-}
-
-/************************************************************************
- * DRAW Tough Bird
- * Draw a tough bird on the screen
- *  INPUT point   The position of the sacred
- *        radius  The size of the bird
- *        hits    How many its remaining to kill the bird 
- *************************************************************************/
-void drawToughBird(const Point & center, float radius, int hits)
-{
-   assert(radius > 1.0);
-   const double increment = M_PI / 6.0;
-   
-   // begin drawing
-   glBegin(GL_TRIANGLES);   
-
-   // three points: center, pt1, pt2
-   Point pt1(false /*check*/);
-   pt1.setX(center.getX() + (radius * cos(0.0)));
-   pt1.setY(center.getY() + (radius * sin(0.0)));   
-   Point pt2(pt1);
-
-   // go around the circle
-   for (double radians = increment;
-        radians <= M_PI * 2.0 + .5;
-        radians += increment)
-   {
-      pt2.setX(center.getX() + (radius * cos(radians)));
-      pt2.setY(center.getY() + (radius * sin(radians)));
-
-      glVertex2f(center.getX(), center.getY());
-      glVertex2f(pt1.getX(),    pt1.getY()   );
-      glVertex2f(pt2.getX(),    pt2.getY()   );
-      
-      pt1 = pt2;
-   }
-      
-   // complete drawing
-   glEnd();   
-
-   // draw the score in the center
-   if (hits > 0 && hits < 10)
-   {
-      glColor3f(0.0 /* red % */, 0.0 /* green % */, 0.0 /* blue % */);
-      glRasterPos2f(center.getX() - 4, center.getY() - 3);
-      glutBitmapCharacter(GLUT_BITMAP_8_BY_13, (char)(hits + '0'));
-      glColor3f(1.0, 1.0, 1.0); // reset to white
-   }
-}
-
-/************************************************************************
- * DRAW Sacred Bird
- * Draw a sacred bird on the screen
- *  INPUT point   The position of the sacred
- *        radius  The size of the bird
- *************************************************************************/
-void drawSacredBird(const Point & center, float radius)
-{
-   // handle auto-rotation
-   static float rotation = 0.0;   
-   rotation += 5.0;
-
-   
-   // begin drawing
-   glBegin(GL_LINE_LOOP);
-   glColor3f(1.0 /* red % */, 0.0 /* green % */, 0.0 /* blue % */);
-
-   
-   //loop around a circle the given number of times drawing a line from
-   //one point to the next
-   for (int i = 0; i < 5; i++)
-   {
-      Point temp(false /*check*/);
-      float radian = (float)i * (M_PI * 2.0) * 0.4;
-      temp.setX(center.getX() + (radius * cos(radian)));
-      temp.setY(center.getY() + (radius * sin(radian)));
-      rotate(temp, center, rotation);
-      glVertex2f(temp.getX(), temp.getY());
-   }
-   
-   // complete drawing
-   glColor3f(1.0, 1.0, 1.0); // reset to white
-   glEnd();   
-}
-
-/**********************************************************************
- * DRAW SMALL ASTEROID
- **********************************************************************/
-void drawSmallAsteroid( const Point & center, int rotation)
-{
-   // ultra simple point
-   struct PT
-   {
-      int x;
-      int y;
-   } points[] = 
-   {
-      {-5, 9},  {4, 8},   {8, 4},   
-      {8, -5},  {-2, -8}, {-2, -3}, 
-      {-8, -4}, {-8, 4},  {-5, 10}
-   };
-   
-   glBegin(GL_LINE_STRIP);
-   for (int i = 0; i < sizeof(points)/sizeof(PT); i++)
-   {
-      Point pt(center.getX() + points[i].x, 
-               center.getY() + points[i].y);
-      rotate(pt, center, rotation);
-      glVertex2f(pt.getX(), pt.getY());
-   }
-   glEnd();
-}
-
-/**********************************************************************
- * DRAW MEDIUM ASTEROID
- **********************************************************************/
-void drawMediumAsteroid( const Point & center, int rotation)
-{
-   // ultra simple point
-   struct PT
-   {
-      int x;
-      int y;
-   } points[] = 
-   {
-      {2, 8},    {8, 15},    {12, 8}, 
-      {6, 2},    {12, -6},   {2, -15},
-      {-6, -15}, {-14, -10}, {-15, 0},
-      {-4, 15},  {2, 8}
-   };
-   
-   glBegin(GL_LINE_STRIP);
-   for (int i = 0; i < sizeof(points)/sizeof(PT); i++)
-   {
-      Point pt(center.getX() + points[i].x, 
-               center.getY() + points[i].y);
-      rotate(pt, center, rotation);
-      glVertex2f(pt.getX(), pt.getY());
-   }
-   glEnd();
-}
-
-/**********************************************************************
- * DRAW LARGE ASTEROID
- **********************************************************************/
-void drawLargeAsteroid( const Point & center, int rotation)
-{
-   // ultra simple point
-   struct PT
-   {
-      int x;
-      int y;
-   } points[] = 
-   {
-      {0, 12},    {8, 20}, {16, 14},
-      {10, 12},   {20, 0}, {0, -20},
-      {-18, -10}, {-20, -2}, {-20, 14},
-      {-10, 20},  {0, 12}
-   };
-   
-   glBegin(GL_LINE_STRIP);
-   for (int i = 0; i < sizeof(points)/sizeof(PT); i++)
-   {
-      Point pt(center.getX() + points[i].x, 
-               center.getY() + points[i].y);
-      rotate(pt, center, rotation);
-      glVertex2f(pt.getX(), pt.getY());
-   }
-   glEnd();
-}
-
-
-/************************************************************************       
- * DRAW Ship                                                                    
- * Draw a spaceship on the screen                                               
- *  INPUT point   The position of the ship                                      
- *        angle   Which direction it is ponted                                  
- *************************************************************************/
-void drawShip(const Point & center, int rotation, bool thrust)
-{
-   // ultra simple point
-   struct PT
-   {
-      int x;
-      int y;
-   };
-   
-   // draw the ship                                                 
-   const PT pointsShip[] = 
-   { // top   r.wing   r.engine l.engine  l.wing    top
-      {0, 6}, {6, -6}, {2, -3}, {-2, -3}, {-6, -6}, {0, 6}  
-   };
-   
-   glBegin(GL_LINE_STRIP);
-   for (int i = 0; i < sizeof(pointsShip)/sizeof(PT); i++)
-   {
-      Point pt(center.getX() + pointsShip[i].x, 
-               center.getY() + pointsShip[i].y);
-      rotate(pt, center, rotation);
-      glVertex2f(pt.getX(), pt.getY());
-   }
-   glEnd();
-
-   // draw the flame if necessary
-   if (thrust)
-   {
-      const PT pointsFlame[3][5] =
-      {
-         { {-2, -3}, {-2, -13}, { 0, -6}, { 2, -13}, {2, -3} },
-         { {-2, -3}, {-4,  -9}, {-1, -7}, { 1, -14}, {2, -3} },
-         { {-2, -3}, {-1, -14}, { 1, -7}, { 4,  -9}, {2, -3} }
-      };
-      
-      glBegin(GL_LINE_STRIP);
-      glColor3f(1.0 /* red % */, 0.0 /* green % */, 0.0 /* blue % */);
-      int iFlame = random(0, 3);
-      for (int i = 0; i < 5; i++)
-      {
-         Point pt(center.getX() + pointsFlame[iFlame][i].x, 
-                  center.getY() + pointsFlame[iFlame][i].y);
-         rotate(pt, center, rotation);
-         glVertex2f(pt.getX(), pt.getY());
-      }
-      glColor3f(1.0, 1.0, 1.0); // reset to white                                  
-      glEnd();
-   }
-}
-
-
+#pragma clang diagnostic pop

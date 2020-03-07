@@ -5,7 +5,6 @@
  * Description: 
 **************************************************************/
 
-#define CRASH_FLAMES
 #ifndef LANDER_H
 #define LANDER_H
 
@@ -33,8 +32,6 @@ class Lander
    // contructors
       Lander() : x(-150.0), y(150.0), alive(1), landed(0)
       {
-         //setFuel(500);
-         //setLanded(0);
          Velocity velocity;
          p.setX(x);
          p.setY(y);
@@ -59,8 +56,6 @@ class Lander
       void applyThrustLeft();
       void applyThrustRight();
       void draw();
-      void drawCrashFlames(const Point &);
-
 };
 
 #endif

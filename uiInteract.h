@@ -2,7 +2,7 @@
  * Header file:
  *    UI INTERFACE
  * Author:
- *    Br. Helfrich
+ *    Kevin Foniciello
  * Summary:
  *    This module will create an OpenGL window,
  *    enter the OpenGL main loop, and accept events.
@@ -38,7 +38,7 @@ public:
       initialize(argc, argv, title, topLeft, bottomRight);
    }
    
-   // Destructor, incase any housecleaning needs to occr
+   // Destructor, in case any housecleaning needs to occur
    ~Interface();
 
    // This will set the game in motion

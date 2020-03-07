@@ -2,7 +2,7 @@
  * Header File:
  *    User Interface Draw : put pixels on the screen
  * Author:
- *    Br. Helfrich
+ *    Kevin Fonciello
  * Summary:
  *    This is the code necessary to draw on the screen. We have a collection
  *    of procedural functions here because each draw function does not
@@ -17,6 +17,12 @@
 #include <cmath>      // for M_PI, sin() and cos()
 #include "point.h"    // Where things are drawn
 using std::string;
+
+int generateGlList(int range);
+void positionCamera(double x, double y, double z, double centerX, float smtg, double centerZ, float upX, float upY, float upZ);
+void drawSphere(const Point & centerPt, double radius);
+void createCheckerboard(const int width, const int depth, int displayListId);
+void drawCheckerboard(int displayListId);
 
 /************************************************************************
  * DRAW DIGIT
@@ -36,36 +42,6 @@ void drawNumber(const Point & topLeft, int number);
  * Draw text using a simple bitmap font
  ************************************************************************/
 void drawText(const Point & topLeft, const char * text);
-
-/************************************************************************
- * ROTATE
- * Rotate a given point (point) around a given origin (center) by a given
- * number of degrees (angle).
- *************************************************************************/
-void rotate(Point & point, const Point & origin, int rotation = 0);
-
-/************************************************************************
- * DRAW RECTANGLE
- * Draw a rectangle on the screen centered on a given point (center) of
- * a given size (width, height), and at a given orientation (rotation)
- * measured in degrees (0 - 360)
- *************************************************************************/
-void drawRect(const Point & center, int width, int height, int rotation);
-
-/************************************************************************
- * DRAW CIRCLE
- * Draw a circle from a given location (center) of a given size (radius).
- *************************************************************************/
-void drawCircle(const Point & center, int radius);
-
-/************************************************************************
- * DRAW POLYGON
- * Draw a polygon from a given location (center) of a given size (radius).
- *************************************************************************/
-void drawPolygon(const Point & center,
-                 int radius = 20,
-                 int points = 4,
-                 int rotation = 0);
 
 /************************************************************************
  * DRAW LINE
@@ -89,37 +65,6 @@ void drawLanderFlames(const Point & point,
                       bool bottom,
                       bool left,
                       bool right);
-
-/************************************************************************
- * DRAW DOT
- * Draw a single point on the screen, 2 pixels by 2 pixels
- *************************************************************************/
-void drawDot(const Point & point);
-
-/************************************************************************
- * DRAW Sacred Bird
- * Draw the bird on the screen
- *************************************************************************/
-void drawSacredBird(const Point & center, float radius);
-
-/************************************************************************
- * DRAW Tough Bird
- * Draw a tough bird on the screen
- *************************************************************************/
-void drawToughBird(const Point & center, float radius, int hits);
-
-/************************************************************************      
- * DRAW Ship                                                                   
- * Draw the spaceship on the screen                                         
- *************************************************************************/
-void drawShip(const Point & point, int rotation, bool thrust = false);
-
-/**********************************************************************
- * DRAW * ASTEROID
- **********************************************************************/
-void drawSmallAsteroid( const Point & point, int rotation);
-void drawMediumAsteroid(const Point & point, int rotation);
-void drawLargeAsteroid( const Point & point, int rotation);
 
 /******************************************************************
  * RANDOM

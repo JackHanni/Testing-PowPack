@@ -20,6 +20,8 @@
 #ifdef __APPLE__
 #include <openGL/gl.h>    // Main OpenGL library
 #include <GLUT/glut.h>    // Second OpenGL library
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif // __APPLE__
 
 #ifdef __linux__
@@ -87,7 +89,7 @@ void drawCallback()
    // even though this is a local variable, all the members are static
    Interface ui;
    // Prepare the background buffer for drawing
-   glClear(GL_COLOR_BUFFER_BIT); //clear the screen
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the screen
    glColor3f(1,1,1);
    
    //calls the client's display function
@@ -280,18 +282,19 @@ void Interface::initialize(int argc, char ** argv, const char * title, Point top
       (int)(bottomRight.getX() - topLeft.getX()),
       (int)(topLeft.getY() - bottomRight.getY()));
             
-   glutInitWindowPosition( 10, 10);                // initial position 
-   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);  // double buffering
+   glutInitWindowPosition( 80, 80);                // initial position
+   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);  // double buffering
    glutCreateWindow(title);              // text on titlebar
-   glutIgnoreKeyRepeat(true);
+//   glutIgnoreKeyRepeat(true);
    
    // set up the drawing style: B/W and 2D
    glClearColor(0, 0, 0, 0);          // Black is the background color
-   gluOrtho2D((int)topLeft.getX(), (int)bottomRight.getX(),
-              (int)bottomRight.getY(), (int)topLeft.getY()); // 2D environment
+//   gluOrtho2D((int)topLeft.getX(), (int)bottomRight.getX(),
+//              (int)bottomRight.getY(), (int)topLeft.getY()); // 2D environment
 
    // register the callbacks so OpenGL knows how to call us
    glutDisplayFunc(   drawCallback    );
+//   ============== HERE
    glutIdleFunc(      drawCallback    );
    glutKeyboardFunc(  keyboardCallback);
    glutSpecialFunc(   keyDownCallback );

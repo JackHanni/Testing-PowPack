@@ -1,35 +1,29 @@
 ###############################################################
 # Program:
-#     Project 07, Moon Lander
-#     Brother Cook, CS165
-# Author:
+#     Project 07, Powder Packing
+# Author(s):
 #     Kevin Foniciello
 # Summary:
-#     This game will only display all the elements to it.
-#     Nothing more, nothing less. 
-# Above and Beyond
-#     When you submit your final project (not for milestones),
-#     list anything here that you did to go above and beyond
-#     the base requirements for your project.
+#     This simulation will only display all the elements to it.
 ###############################################################
 
 
 LFLAGS = -lglut -lGLU -lGL
 
 ###############################################################
-# Build the main Moon Lander game
+# Build the main Powder Packing simulator
 ###############################################################
-a.out: driver.o ground.o game.o uiInteract.o uiDraw.o point.o lander.o velocity.o
-	g++ driver.o ground.o game.o uiInteract.o uiDraw.o point.o lander.o velocity.o $(LFLAGS)
-	tar -j -cf moonLander.tar makefile *.h *.cpp
+a.out: driver.o ground.o simulation.o uiInteract.o uiDraw.o point.o lander.o velocity.o Camera.o Checkerboard.o Sphere.o
+	g++ driver.o ground.o simulation.o uiInteract.o uiDraw.o point.o lander.o velocity.o Camera.o Checkerboard.o Sphere.o $(LFLAGS)
+# 	tar -j -cf powderPacking.tar makefile *.h *.cpp
 
 ###############################################################
 # Individual files
-#    uiDraw.o      Draw polygons on the screen and do all OpenGL graphics
+#    uiDraw.o      Draw spheres on the screen and do all OpenGL graphics
 #    uiInteract.o  Handles input events
 #    point.o       The position on the screen
 #    ground.o      Handles the ground / world
-#    game.o        Handles the game interaction
+#    simulation.o  Handles the simulator interaction
 ###############################################################
 uiDraw.o: uiDraw.cpp uiDraw.h
 	g++ -c uiDraw.cpp
@@ -43,20 +37,26 @@ point.o: point.cpp point.h
 ground.o: ground.cpp ground.h
 	g++ -c ground.cpp
 
-game.o: game.h game.cpp uiDraw.h uiInteract.h point.h ground.h
-	g++ -c game.cpp
+simulation.o: simulation.h simulation.cpp uiDraw.h uiInteract.h point.h ground.h
+	g++ -c simulation.cpp
 
-driver.o: driver.cpp game.h uiInteract.h
+driver.o: driver.cpp simulation.h uiInteract.h
 	g++ -c driver.cpp
 
-#######################################################################
-# ADD YOUR ADDITIONAL RULES HERE!
-#######################################################################
-lander.o : lander.cpp lander.h
+lander.o: lander.cpp lander.h
 	g++ -c lander.cpp
 
-velocity.o : velocity.cpp velocity.h
+velocity.o: velocity.cpp velocity.h
 	g++ -c velocity.cpp
+
+Camera.o: Camera.cpp Camera.h
+	g++ -c Camera.cpp
+
+Checkerboard.o: Checkerboard.cpp Checkerboard.h
+	g++ -c Checkerboard.cpp
+
+Sphere.o: Sphere.cpp Sphere.h
+	g++ -c Sphere.cpp
 
 ###############################################################
 # General rules

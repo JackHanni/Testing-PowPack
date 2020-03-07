@@ -1,26 +1,28 @@
 /*************************************************************
- * File: game.h
- * Author: Br. Burton
+ * File: simulation.h
+ * Author: Kevin Foniciello
  *
- * Description: Contains the definition of the game class.
- *
- * Please DO NOT share this code with other students from
- *  other sections or other semesters. They may not receive
- *  the same code that you are receiving.
+ * Description: Contains the definition of the simulation class.
  *************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef SIMULATION_H
+#define SIMULATION_H
+
+#ifdef __APPLE__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif // __APPLE__
 
 #include "uiDraw.h"
 #include "uiInteract.h"
 #include "point.h"
 #include "ground.h"
 #include "lander.h"
+#include "Camera.h"
+#include "Sphere.h"
+#include "Checkerboard.h"
 
 #define FUEL        500    // initial fuel for the game
-#define MIN_SPEED   3.0    // minimal landing speed
-#define FALL_HEIGHT 4.0    // greatest height we can fall from
 
 #define GRAVITY_AMOUNT 0.1
 
@@ -28,17 +30,19 @@
  * GAME
  * The main game class containing all the state
  *****************************************/
-class Game
+class Simulation
 {
 public:
    /*********************************************
     * Constructor
     * Initializes the game
     *********************************************/
-   Game(Point tl, Point br) : topLeft(tl), bottomRight(br), ground(Ground(topLeft, bottomRight))
+  Simulation(Point tl, Point br) : topLeft(tl), bottomRight(br), ground(Ground(topLeft, bottomRight))
    {
       // Set up the initial conditions of the game
       lander.setFuel(FUEL);
+      checkerboard.setDisplayListId(generateGlList(1));
+      createCheckerboard(checkerboard.getWidth(), checkerboard.getDepth(), checkerboard.getDisplayListId());
    }
    
    /*********************************************
@@ -75,7 +79,10 @@ private:
    
    Ground ground;
    Lander lander;
+   Sphere sphere;
+   Camera camera;
+   Checkerboard checkerboard;
    
 };
 
-#endif /* GAME_H */
+#endif /*SIMULATION_H*/
