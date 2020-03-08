@@ -13,6 +13,7 @@ class Camera
   double dy;     // increment in y for moving the camera up/down
 public:
   Camera() : theta(3), y(7), dTheta(0.04), dy(0.2) {}
+//  ~Camera() {}
   double getX() { return 10 * cos(theta); }
   double getY() { return y; }
   double getZ() { return 10 * sin(theta); }

@@ -17,7 +17,31 @@
 #ifndef UI_INTERFACE_H
 #define UI_INTERFACE_H
 
- #include "point.h"
+#ifdef __APPLE__
+#include <openGL/gl.h> // Main OpenGL library
+#include <GLUT/glut.h> // Second OpenGL library
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif // __APPLE__
+
+#ifdef __linux__
+#include <GL/gl.h>   // Main OpenGL library
+#include <GL/glut.h> // Second OpenGL library
+#endif               // __linux__
+
+#ifdef _WIN32
+#include <stdio.h>
+#include <stdlib.h>
+#include <Gl/glut.h> // OpenGL library we copied
+#include <ctime>     // for ::Sleep();
+#include <Windows.h>
+
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif // _WIN32
+
+#include "point.h"
+#include "Camera.h"
 
 /********************************************
  * INTERFACE
@@ -42,7 +66,7 @@ public:
    ~Interface();
 
    // This will set the game in motion
-   void run(void (*callBack)(const Interface *, void *), void *p);
+   void run(void (*callBack)(const Interface *, void *), void *p, void * camera);
 
    // Is it time to redraw the screen
    bool isTimeToDraw();
@@ -72,6 +96,7 @@ public:
    bool isSpace()     const { return isSpacePress; };
    
    static void *p;                   // for client
+   static void *camera;
    static void (*callBack)(const Interface *, void *);
 
 private:
@@ -80,6 +105,7 @@ private:
    static bool         initialized;  // only run the constructor once!
    static double       timePeriod;   // interval between frame draws
    static unsigned int nextTick;     // time (from clock()) of our next draw
+
 
    static int  isDownPress;          // is the down arrow currently pressed?
    static int  isUpPress;            //    "   up         "
@@ -102,6 +128,9 @@ private:
  *************************************************************************/
 void drawCallback();
 
+void reshapeCallback(GLint w, GLint h);
+void timerCallback(int v);
+
 /************************************************************************
  * KEY DOWN CALLBACK
  * When a key on the keyboard has been pressed, we need to pass that
@@ -121,6 +150,9 @@ void keyUpCallback(int key, int x, int y);
  * the space bar or the letter 'q'
  ***************************************************************/
 void keyboardCallback(unsigned char key, int x, int y);
+
+void reDraw();
+//void flush();
 
 /************************************************************************
  * RUN

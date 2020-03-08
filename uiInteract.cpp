@@ -10,30 +10,29 @@
  *     pointer towards the bottom of the file.
  ************************************************************************/
 
-#include <string>     // need you ask?
-#include <sstream>    // convert an integer into text
-#include <cassert>    // I feel the need... the need for asserts
-#include <time.h>     // for clock
-#include <cstdlib>    // for rand()
-
+#include <string>  // need you ask?
+#include <sstream> // convert an integer into text
+#include <cassert> // I feel the need... the need for asserts
+#include <time.h>  // for clock
+#include <cstdlib> // for rand()
 
 #ifdef __APPLE__
-#include <openGL/gl.h>    // Main OpenGL library
-#include <GLUT/glut.h>    // Second OpenGL library
+#include <openGL/gl.h> // Main OpenGL library
+#include <GLUT/glut.h> // Second OpenGL library
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif // __APPLE__
 
 #ifdef __linux__
-#include <GL/gl.h>    // Main OpenGL library
-#include <GL/glut.h>  // Second OpenGL library
-#endif // __linux__
+#include <GL/gl.h>   // Main OpenGL library
+#include <GL/glut.h> // Second OpenGL library
+#endif               // __linux__
 
 #ifdef _WIN32
 #include <stdio.h>
 #include <stdlib.h>
-#include <Gl/glut.h>           // OpenGL library we copied
-#include <ctime>            // for ::Sleep();
+#include <Gl/glut.h> // OpenGL library we copied
+#include <ctime>     // for ::Sleep();
 #include <Windows.h>
 
 #define _USE_MATH_DEFINES
@@ -41,10 +40,10 @@
 #endif // _WIN32
 
 #include "uiInteract.h"
+#include "simulator.h"
 #include "point.h"
 
 using namespace std;
-
 
 /*********************************************************************
  * SLEEP
@@ -53,25 +52,25 @@ using namespace std;
  * that we are idle.  the nanosleep function performs this task for us
  *   INPUT: msSleep: sleep time in milliseconds
  *********************************************************************/
-void sleep(unsigned long msSleep)
+void
+sleep(unsigned long msSleep)
 {
-   // Windows handles sleep one way
+  // Windows handles sleep one way
 #ifdef _WIN32
-   ::Sleep(msSleep + 35);
+  ::Sleep(msSleep + 35);
 
-   // Unix-based operating systems (OS-X, Linux) do it another
-#else // LINUX, XCODE
-   timespec req = {};
-   time_t sec = (int)(msSleep / 1000);
-   msSleep -= (sec * 1000);
+  // Unix-based operating systems (OS-X, Linux) do it another
+#else  // LINUX, XCODE
+  timespec req = {};
+  time_t sec = (int)(msSleep / 1000);
+  msSleep -= (sec * 1000);
 
-   req.tv_sec = sec;
-   req.tv_nsec = msSleep * 1000000L;
+  req.tv_sec = sec;
+  req.tv_nsec = msSleep * 1000000L;
 
-   while (nanosleep(&req, &req) == -1)
-      ;
+  while (nanosleep(&req, &req) == -1)
+    ;
 #endif // LINUX, XCODE
-   return;
 }
 
 /************************************************************************
@@ -84,30 +83,64 @@ void sleep(unsigned long msSleep)
  * Note: This and all other callbacks can't be member functions, they must
  * have global scope for OpenGL to see them.
  *************************************************************************/
-void drawCallback()
+void
+drawCallback()
 {
-   // even though this is a local variable, all the members are static
-   Interface ui;
-   // Prepare the background buffer for drawing
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the screen
-   glColor3f(1,1,1);
-   
-   //calls the client's display function
-   assert(ui.callBack != NULL);
-   ui.callBack(&ui, ui.p);
-   
-   //loop until the timer runs out
-   if (!ui.isTimeToDraw())
-      sleep((unsigned long)((ui.getNextTick() - clock()) / 1000));
+//  cout << "drawCallBack()\n";
+  // even though this is a local variable, all the members are static
+  Interface ui;
 
-   // from this point, set the next draw time
-   ui.setNextDrawTime();
+  // Prepare the background buffer for drawing
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the screen
+  glLoadIdentity();
+//  glColor3f(1, 1, 1);
 
-   // bring forth the background buffer
-   glutSwapBuffers();
+  gluLookAt(((Camera *)(ui.camera))->getX(),
+            ((Camera *)(ui.camera))->getY(),
+            ((Camera *)(ui.camera))->getZ(),
+            ((Simulator *)(ui.p))->getCheckerboard().centerx(),
+            0.0,
+            ((Simulator *)(ui.p))->getCheckerboard().centerz(),
+            0.0,
+            1.0,
+            0.0);
 
-   // clear the space at the end
-   ui.keyEvent();
+  // calls the client's display function
+  assert(ui.callBack != NULL);
+  ui.callBack(&ui, ui.p);
+
+  // loop until the timer runs out
+//  if (!ui.isTimeToDraw())
+//    sleep((unsigned long)((ui.getNextTick() - clock()) / 1000));
+
+  // from this point, set the next draw time
+//  ui.setNextDrawTime();
+
+  // bring forth the background buffer
+  glFlush();
+  glutSwapBuffers();
+
+  // clear the space at the end
+  ui.keyEvent();
+}
+
+//// On reshape, constructs a camera that perfectly fits the window.
+void
+reshapeCallback(GLint w, GLint h)
+{
+  glViewport(0, 0, w, h);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(40.0, GLfloat(w) / GLfloat(h), 1.0, 150.0);
+  glMatrixMode(GL_MODELVIEW);
+}
+
+//// Requests to draw the next frame.
+void
+timerCallback(int v)
+{
+  glutPostRedisplay();
+  glutTimerFunc(1000 / 60, timerCallback, v);
 }
 
 /************************************************************************
@@ -117,12 +150,13 @@ void drawCallback()
  *   INPUT   key:   the key we pressed according to the GLUT_KEY_ prefix
  *           x y:   the position in the window, which we ignore
  *************************************************************************/
-void keyDownCallback(int key, int x, int y)
+void
+keyDownCallback(int key, int x, int y)
 {
-   // Even though this is a local variable, all the members are static
-   // so we are actually getting the same version as in the constructor.
-   Interface ui;
-   ui.keyEvent(key, true /*fDown*/);
+  // Even though this is a local variable, all the members are static
+  // so we are actually getting the same version as in the constructor.
+  Interface ui;
+  ui.keyEvent(key, true /*fDown*/);
 }
 
 /************************************************************************
@@ -131,12 +165,13 @@ void keyDownCallback(int key, int x, int y)
  *   INPUT   key:   the key we pressed according to the GLUT_KEY_ prefix
  *           x y:   the position in the window, which we ignore
  *************************************************************************/
-void keyUpCallback(int key, int x, int y)
+void
+keyUpCallback(int key, int x, int y)
 {
-   // Even though this is a local variable, all the members are static
-   // so we are actually getting the same version as in the constructor.
-   Interface ui;
-   ui.keyEvent(key, false /*fDown*/);
+  // Even though this is a local variable, all the members are static
+  // so we are actually getting the same version as in the constructor.
+  Interface ui;
+  ui.keyEvent(key, false /*fDown*/);
 }
 
 /***************************************************************
@@ -144,12 +179,58 @@ void keyUpCallback(int key, int x, int y)
  * Generic callback to a regular ascii keyboard event, such as
  * the space bar or the letter 'q'
  ***************************************************************/
-void keyboardCallback(unsigned char key, int x, int y)
+void
+keyboardCallback(unsigned char key, int x, int y)
 {
-   // Even though this is a local variable, all the members are static
-   // so we are actually getting the same version as in the constructor.
-   Interface ui;
-   ui.keyEvent(key, true /*fDown*/);
+  // Even though this is a local variable, all the members are static
+  // so we are actually getting the same version as in the constructor.
+  Interface ui;
+  ui.keyEvent(key, true /*fDown*/);
+}
+
+///
+void
+reDraw()
+{
+  glutPostRedisplay();
+}
+
+//void
+//flush()
+//{
+//  glFlush();
+//}
+
+/***************************************************************
+ * INTERFACE : KEY EVENT
+ * Either set the up or down event for a given key
+ *   INPUT   key     which key is pressed
+ *           fDown   down or brown
+ ****************************************************************/
+void
+Interface::keyEvent(int key, bool fDown)
+{
+  switch (key)
+  {
+    case GLUT_KEY_DOWN:
+      isDownPress = fDown;
+      break;
+    case GLUT_KEY_UP:
+      isUpPress = fDown;
+      break;
+    case GLUT_KEY_RIGHT:
+      isRightPress = fDown;
+      break;
+    case GLUT_KEY_LEFT:
+      isLeftPress = fDown;
+      break;
+    case GLUT_KEY_HOME:
+    case ' ':
+      isSpacePress = fDown;
+      break;
+    default:
+      break;
+  }
 }
 
 /***************************************************************
@@ -158,56 +239,29 @@ void keyboardCallback(unsigned char key, int x, int y)
  *   INPUT   key     which key is pressed
  *           fDown   down or brown
  ****************************************************************/
-void Interface::keyEvent(int key, bool fDown)
+void
+Interface::keyEvent()
 {
-   switch(key)
-   {
-      case GLUT_KEY_DOWN:
-         isDownPress = fDown;
-         break;
-      case GLUT_KEY_UP:
-         isUpPress = fDown;
-         break;
-      case GLUT_KEY_RIGHT:
-         isRightPress = fDown;
-         break;
-      case GLUT_KEY_LEFT:
-         isLeftPress = fDown;
-         break;
-      case GLUT_KEY_HOME:
-      case ' ':
-         isSpacePress = fDown;
-         break;
-   }
+  if (isDownPress)
+    isDownPress++;
+  if (isUpPress)
+    isUpPress++;
+  if (isLeftPress)
+    isLeftPress++;
+  if (isRightPress)
+    isRightPress++;
+  isSpacePress = false;
 }
-/***************************************************************
- * INTERFACE : KEY EVENT
- * Either set the up or down event for a given key
- *   INPUT   key     which key is pressed
- *           fDown   down or brown
- ****************************************************************/
-void Interface::keyEvent()
-{
-   if (isDownPress)
-      isDownPress++;
-   if (isUpPress)
-      isUpPress++;
-   if (isLeftPress)
-      isLeftPress++;
-   if (isRightPress)
-      isRightPress++;
-   isSpacePress = false;
-}
-
 
 /************************************************************************
  * INTEFACE : IS TIME TO DRAW
  * Have we waited long enough to draw swap the background buffer with
  * the foreground buffer?
  *************************************************************************/
-bool Interface::isTimeToDraw()
+bool
+Interface::isTimeToDraw()
 {
-   return ((unsigned int)clock() >= nextTick);
+  return ((unsigned int)clock() >= nextTick);
 }
 
 /************************************************************************
@@ -215,9 +269,10 @@ bool Interface::isTimeToDraw()
  * What time should we draw the buffer again?  This is a function of
  * the current time and the frames per second.
  *************************************************************************/
-void Interface::setNextDrawTime()
+void
+Interface::setNextDrawTime()
 {
-   nextTick = clock() + static_cast<int> (timePeriod * CLOCKS_PER_SEC);
+  nextTick = clock() + static_cast<int>(timePeriod * CLOCKS_PER_SEC);
 }
 
 /************************************************************************
@@ -227,9 +282,10 @@ void Interface::setNextDrawTime()
  * to 30 frames/second but the client can set this at will.
  *    INPUT  value        The number of frames per second.  30 is default
  *************************************************************************/
-void Interface::setFramesPerSecond(double value)
+void
+Interface::setFramesPerSecond(double value)
 {
-    timePeriod = (1 / value);
+  timePeriod = (1 / value);
 }
 
 /***************************************************
@@ -237,26 +293,28 @@ void Interface::setFramesPerSecond(double value)
  * All the static member variables need to be initialized
  * Somewhere globally.  This is a good spot
  **************************************************/
-int          Interface::isDownPress  = 0;
-int          Interface::isUpPress    = 0;
-int          Interface::isLeftPress  = 0;
-int          Interface::isRightPress = 0;
-bool         Interface::isSpacePress = false;
-bool         Interface::initialized  = false;
-double       Interface::timePeriod   = 1.0 / 30; // default to 30 frames/second
-unsigned int Interface::nextTick     = 0;        // redraw now please
-void *       Interface::p            = NULL;
+int Interface::isDownPress = 0;
+int Interface::isUpPress = 0;
+int Interface::isLeftPress = 0;
+int Interface::isRightPress = 0;
+bool Interface::isSpacePress = false;
+bool Interface::initialized = false;
+double Interface::timePeriod = 1.0 / 30; // default to 30 frames/second
+unsigned int Interface::nextTick = 0;    // redraw now please
+void * Interface::p = NULL;
+void * Interface::camera = NULL;
 void (*Interface::callBack)(const Interface *, void *) = NULL;
-
 
 /************************************************************************
  * INTERFACE : DESTRUCTOR
  * Nothing here!
  ***********************************************************************/
-Interface::~Interface()
-{
-}
-
+#ifdef __APPLE__
+Interface::~Interface() = default;
+#endif
+#ifdef __linux__
+Interface::~Interface() {}
+#endif
 
 /************************************************************************
  * INTEFACE : INITIALIZE
@@ -267,42 +325,55 @@ Interface::~Interface()
  *           argv:       The actual command-line parameters
  *           title:      The text for the titlebar of the window
  *************************************************************************/
-void Interface::initialize(int argc, char ** argv, const char * title, Point topLeft, Point bottomRight)
+void
+Interface::initialize(int argc, char ** argv, const char * title, Point topLeft, Point bottomRight)
 {
-   if (initialized)
-      return;
-   
-   // set up the random number generator
-   srand((unsigned int)time(NULL));
+  if (initialized)
+    return;
 
-   // create the window
-   glutInit(&argc, argv);
-   Point point;
-   glutInitWindowSize(   // size of the window
+  GLfloat WHITE[] = {1, 1, 1};
+
+  // set up the random number generator
+  srand((unsigned int)time(NULL));
+
+  // create the window
+  glutInit(&argc, argv);
+//  Point point;
+  glutInitWindowSize( // size of the window
       (int)(bottomRight.getX() - topLeft.getX()),
       (int)(topLeft.getY() - bottomRight.getY()));
-            
-   glutInitWindowPosition( 80, 80);                // initial position
-   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);  // double buffering
-   glutCreateWindow(title);              // text on titlebar
-//   glutIgnoreKeyRepeat(true);
-   
-   // set up the drawing style: B/W and 2D
-   glClearColor(0, 0, 0, 0);          // Black is the background color
-//   gluOrtho2D((int)topLeft.getX(), (int)bottomRight.getX(),
-//              (int)bottomRight.getY(), (int)topLeft.getY()); // 2D environment
 
-   // register the callbacks so OpenGL knows how to call us
-   glutDisplayFunc(   drawCallback    );
-//   ============== HERE
-   glutIdleFunc(      drawCallback    );
-   glutKeyboardFunc(  keyboardCallback);
-   glutSpecialFunc(   keyDownCallback );
-   glutSpecialUpFunc( keyUpCallback   );
-   initialized = true;
-   
-   // done
-   return;
+  glutInitWindowPosition(80, 80);                           // initial position
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // triple buffering
+  glutCreateWindow(title);                                  // text on titlebar
+//  glutIgnoreKeyRepeat(true);
+
+  // set up the drawing style: B/W and 3D
+//  glClearColor(0, 0, 0, 0); // Black is the background color
+  //  gluOrtho2D((int)topLeft.getX(), (int)bottomRight.getX(), (int)bottomRight.getY(),
+  //  (int)topLeft.getY()); // 2D environment
+
+  // register the callbacks so OpenGL knows how to call us
+  glutDisplayFunc(drawCallback);
+  glutReshapeFunc(reshapeCallback);
+//  glutIdleFunc(drawCallback);
+  glutKeyboardFunc(keyboardCallback);
+  glutSpecialUpFunc(keyUpCallback);
+  glutSpecialFunc(keyDownCallback);
+  glutTimerFunc(100, timerCallback, 0);
+
+
+  glEnable(GL_DEPTH_TEST);
+
+  // set up object lighting
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);
+  glMaterialf(GL_FRONT, GL_SHININESS, 30);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+
+  initialized = true;
 }
 
 /************************************************************************
@@ -316,14 +387,13 @@ void Interface::initialize(int argc, char ** argv, const char * title, Point top
  *                   will need to cast this back to your own data
  *                   type before using it.
  *************************************************************************/
-void Interface::run(void (*callBack)(const Interface *, void *), void *p)
+void
+Interface::run(void (*callBack)(const Interface *, void *), void * p, void * camera)
 {
-   // setup the callbacks
-   this->p = p;
-   this->callBack = callBack;
+  // setup the callbacks
+  Interface::p = p;
+  Interface::camera = camera;
+  Interface::callBack = callBack;
 
-   glutMainLoop();
-
-   return;
+  glutMainLoop();
 }
-

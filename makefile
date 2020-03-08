@@ -4,7 +4,7 @@
 # Author(s):
 #     Kevin Foniciello
 # Summary:
-#     This simulation will only display all the elements to it.
+#     This simulator will only display all the elements to it.
 ###############################################################
 
 
@@ -13,8 +13,8 @@ LFLAGS = -lglut -lGLU -lGL
 ###############################################################
 # Build the main Powder Packing simulator
 ###############################################################
-a.out: driver.o ground.o simulation.o uiInteract.o uiDraw.o point.o lander.o velocity.o Camera.o Checkerboard.o Sphere.o
-	g++ driver.o ground.o simulation.o uiInteract.o uiDraw.o point.o lander.o velocity.o Camera.o Checkerboard.o Sphere.o $(LFLAGS)
+a.out: driver.o ground.o simulator.o uiInteract.o uiDraw.o point.o lander.o velocity.o Camera.o Checkerboard.o Sphere.o
+	g++ driver.o ground.o simulator.o uiInteract.o uiDraw.o point.o lander.o velocity.o Camera.o Checkerboard.o Sphere.o $(LFLAGS)
 # 	tar -j -cf powderPacking.tar makefile *.h *.cpp
 
 ###############################################################
@@ -23,7 +23,7 @@ a.out: driver.o ground.o simulation.o uiInteract.o uiDraw.o point.o lander.o vel
 #    uiInteract.o  Handles input events
 #    point.o       The position on the screen
 #    ground.o      Handles the ground / world
-#    simulation.o  Handles the simulator interaction
+#    simulator.o  Handles the simulator interaction
 ###############################################################
 uiDraw.o: uiDraw.cpp uiDraw.h
 	g++ -c uiDraw.cpp
@@ -37,10 +37,10 @@ point.o: point.cpp point.h
 ground.o: ground.cpp ground.h
 	g++ -c ground.cpp
 
-simulation.o: simulation.h simulation.cpp uiDraw.h uiInteract.h point.h ground.h
-	g++ -c simulation.cpp
+simulator.o: simulator.h simulator.cpp uiDraw.h uiInteract.h point.h ground.h
+	g++ -c simulator.cpp
 
-driver.o: driver.cpp simulation.h uiInteract.h
+driver.o: driver.cpp simulator.h uiInteract.h
 	g++ -c driver.cpp
 
 lander.o: lander.cpp lander.h
@@ -62,4 +62,4 @@ Sphere.o: Sphere.cpp Sphere.h
 # General rules
 ###############################################################
 clean:
-	rm a.out *.o *.tar
+	rm a.out *.o

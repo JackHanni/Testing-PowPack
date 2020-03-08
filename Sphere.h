@@ -5,14 +5,9 @@
 #ifndef POWPACK_SPHERE_H
 #define POWPACK_SPHERE_H
 
-//#ifdef __APPLE_CC__
-//#include <GLUT/glut.h>
-//#else
-//#include <GL/glut.h>
-//#endif
 #include <cmath>
 
-#include "point.cpp"
+#include "point.h"
 
 // A ball.  A ball has a radius, a color, and bounces up and down between
 // a maximum height and the xz plane.  Therefore its x and z coordinates

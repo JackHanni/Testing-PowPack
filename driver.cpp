@@ -8,7 +8,8 @@
  *  called each time through the simulation loop.
  ******************************************************/
 
-#include "simulation.h"
+#include "simulator.h"
+#include "Camera.h"
 #include "uiInteract.h"
 
 /*************************************
@@ -21,11 +22,11 @@
 void
 callBack(const Interface * pUI, void * p)
 {
-  Simulation * pSimulation = (Simulation *)p;
+  Simulator * pSimulator = (Simulator *)p;
 
-  pSimulation->advance();
-  pSimulation->handleInput(*pUI);
-  pSimulation->draw(*pUI);
+  pSimulator->advance();
+  pSimulator->handleInput(*pUI);
+  pSimulator->draw(*pUI);
 }
 
 /*********************************
@@ -40,8 +41,9 @@ main(int argc, char ** argv)
   Point bottomRight(400, -300);
 
   Interface ui(argc, argv, "Powder Packing", topLeft, bottomRight);
-  Simulation simulation(topLeft, bottomRight);
-  ui.run(callBack, &simulation);
+  Simulator simulator(topLeft, bottomRight);
+  Camera camera;
+  ui.run(callBack, &simulator, &camera);
 
   return 0;
 }

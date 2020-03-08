@@ -19,7 +19,7 @@
 using std::string;
 
 int generateGlList(int range);
-void positionCamera(double x, double y, double z, double centerX, float smtg, double centerZ, float upX, float upY, float upZ);
+void positionCamera(double x, double y, double z, double centerX, float centerY, double centerZ, float upX, float upY, float upZ);
 void drawSphere(const Point & centerPt, double radius);
 void createCheckerboard(const int width, const int depth, int displayListId);
 void drawCheckerboard(int displayListId);

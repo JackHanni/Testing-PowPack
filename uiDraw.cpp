@@ -66,8 +66,8 @@ const char NUMBER_OUTLINES[10][20] =
 
 int generateGlList(int range) { return glGenLists(range); }
 
-void positionCamera(double x, double y, double z, double centerX, float smtg, double centerZ, float upX, float upY, float upZ) {
-  gluLookAt(x, y, z, centerX, smtg, centerZ, upX, upY, upZ);
+void positionCamera(double x, double y, double z, double centerX, float centerY, double centerZ, float upX, float upY, float upZ) {
+  gluLookAt(x, y, z, centerX, centerY, centerZ, upX, upY, upZ);
 }
 
 void drawSphere(const Point & centerPt, double radius)
