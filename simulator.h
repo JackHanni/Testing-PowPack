@@ -16,13 +16,10 @@
 #include "uiDraw.h"
 #include "uiInteract.h"
 #include "point.h"
-//#include "ground.h"
-//#include "lander.h"
 #include "Camera.h"
 #include "Sphere.h"
 #include "Checkerboard.h"
 
-#define FUEL 500 // initial fuel for the game
 
 #define GRAVITY_AMOUNT 0.1
 
@@ -41,8 +38,6 @@ public:
   Simulator(Point tl, Point br)
     : topLeft(tl), bottomRight(br) //, ground(Ground(topLeft, bottomRight))
   {
-    // Set up the initial conditions of the game
-    //      lander.setFuel(FUEL);
     checkerboard.setDisplayListId(generateGlList(1));
     createCheckerboard(
         checkerboard.getWidth(), checkerboard.getDepth(), checkerboard.getDisplayListId());
@@ -71,22 +66,12 @@ public:
   Checkerboard getCheckerboard() { return checkerboard; }
 
 private:
-  /*********************************************
-   * Function: justLanded
-   * Description: Returns true if the lander has
-   *  just successfully landed.
-   *********************************************/
-  //   bool justLanded() const;
-
   // The coordinates of the screen
   Point topLeft;
   Point bottomRight;
 
-  //   Ground ground;
   Checkerboard checkerboard;
-  //   Lander lander;
   Sphere sphere;
-//  Camera camera;
 };
 
 #endif /*SIMULATION_H*/
