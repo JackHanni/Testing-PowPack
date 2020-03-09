@@ -86,7 +86,6 @@ sleep(unsigned long msSleep)
 void
 drawCallback()
 {
-//  cout << "drawCallBack()\n";
   // even though this is a local variable, all the members are static
   Interface ui;
 
@@ -98,9 +97,9 @@ drawCallback()
   gluLookAt(((Camera *)(ui.camera))->getX(),
             ((Camera *)(ui.camera))->getY(),
             ((Camera *)(ui.camera))->getZ(),
-            ((Simulator *)(ui.p))->getCheckerboard().centerx(),
+            ((Simulator *)(ui.p))->getCheckerboard().centerX(),
             0.0,
-            ((Simulator *)(ui.p))->getCheckerboard().centerz(),
+            ((Simulator *)(ui.p))->getCheckerboard().centerZ(),
             0.0,
             1.0,
             0.0);
@@ -110,11 +109,11 @@ drawCallback()
   ui.callBack(&ui, ui.p);
 
   // loop until the timer runs out
-//  if (!ui.isTimeToDraw())
-//    sleep((unsigned long)((ui.getNextTick() - clock()) / 1000));
+  if (!ui.isTimeToDraw())
+    sleep((unsigned long)((ui.getNextTick() - clock()) / 1000));
 
   // from this point, set the next draw time
-//  ui.setNextDrawTime();
+  ui.setNextDrawTime();
 
   // bring forth the background buffer
   glFlush();
@@ -299,7 +298,7 @@ int Interface::isLeftPress = 0;
 int Interface::isRightPress = 0;
 bool Interface::isSpacePress = false;
 bool Interface::initialized = false;
-double Interface::timePeriod = 1.0 / 30; // default to 30 frames/second
+double Interface::timePeriod = 1.0 / 60; // default to 60 frames/second
 unsigned int Interface::nextTick = 0;    // redraw now please
 void * Interface::p = NULL;
 void * Interface::camera = NULL;
@@ -360,7 +359,7 @@ Interface::initialize(int argc, char ** argv, const char * title, Point topLeft,
   glutKeyboardFunc(keyboardCallback);
   glutSpecialUpFunc(keyUpCallback);
   glutSpecialFunc(keyDownCallback);
-  glutTimerFunc(100, timerCallback, 0);
+//  glutTimerFunc(100, timerCallback, 0);
 
 
   glEnable(GL_DEPTH_TEST);

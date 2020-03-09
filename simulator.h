@@ -13,13 +13,15 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif // __APPLE__
 
+#include <vector>
+using std::vector;
+
 #include "uiDraw.h"
 #include "uiInteract.h"
 #include "point.h"
 #include "Camera.h"
 #include "Sphere.h"
 #include "Checkerboard.h"
-
 
 #define GRAVITY_AMOUNT 0.1
 
@@ -34,13 +36,19 @@ public:
    * Constructor
    * Initializes the game
    *********************************************/
-   Simulator() {}
+  Simulator() {}
   Simulator(Point tl, Point br)
     : topLeft(tl), bottomRight(br) //, ground(Ground(topLeft, bottomRight))
   {
     checkerboard.setDisplayListId(generateGlList(1));
     createCheckerboard(
         checkerboard.getWidth(), checkerboard.getDepth(), checkerboard.getDisplayListId());
+
+    for (int i = 0; i < 2; ++i)
+    {
+      Point point( (float)checkerboard.centerX(), (float)(i == 1 ? 5.0 : 0.0), (float)checkerboard.centerZ());
+      spheres.push_back(Sphere(0.5, &point));
+    }
   }
 
   /*********************************************
@@ -71,7 +79,7 @@ private:
   Point bottomRight;
 
   Checkerboard checkerboard;
-  Sphere sphere;
+  vector<Sphere> spheres;
 };
 
 #endif /*SIMULATION_H*/

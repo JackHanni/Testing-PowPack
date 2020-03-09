@@ -16,8 +16,8 @@ class Checkerboard
 public:
   Checkerboard() : width(8), depth(8) {}
   Checkerboard(int width, int depth) : width(width), depth(depth) {}
-  double centerx() { return width / 2; }
-  double centerz() { return depth / 2; }
+  double centerX() { return width / 2; }
+  double centerZ() { return depth / 2; }
 
   int getDisplayListId() const { return displayListId; }
   void setDisplayListId(int dlID) { displayListId = dlID; }

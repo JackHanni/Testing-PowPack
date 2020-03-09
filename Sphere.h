@@ -27,19 +27,18 @@ public:
   {
     velocity = acc * dt;
   }
-  Sphere(float r, float * c, float y, float x, float z) : radius(r)
+  Sphere(float r, Point * p) : radius(r)
   {
     acc = -1.0;
     dt = 0.05;
-    p.setX(x);
-    p.setY(y);
-    p.setZ(z);
+    velocity = acc * dt;
+    this->p = *p;
   }
 
-  float get_radius() { return radius; }
-  Point get_point() { return p; }
+  float getRadius() { return radius; }
+  Point getPoint() { return p; }
 
-  bool touching(Sphere ball);
+  bool touching(Sphere sphere);
   void advance();
   void draw();
 };

@@ -7,8 +7,9 @@
  *************************************************************/
 
 #include "simulator.h"
-
 #include "uiInteract.h"
+#include <vector>
+using std::vector;
 
 /***************************************
  * SIMULATION :: ADVANCE
@@ -18,7 +19,12 @@
 void
 Simulator::advance()
 {
-  sphere.advance();
+  for (vector<Sphere>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
+  {
+    Sphere * sphere = &(*sphereIterator);
+    //    if (sphere->getPoint().getX())
+    sphere->advance();
+  }
 }
 
 /***************************************
@@ -56,7 +62,11 @@ Simulator::handleInput(const Interface & ui)
 void
 Simulator::draw(const Interface & ui)
 {
-  sphere.draw();
+  for (vector<Sphere>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
+  {
+    Sphere * sphere = &(*sphereIterator);
+    sphere->draw();
+  }
 
   checkerboard.draw();
 }

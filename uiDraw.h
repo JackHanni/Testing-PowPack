@@ -13,6 +13,25 @@
 #ifndef UI_DRAW_H
 #define UI_DRAW_H
 
+#ifdef __APPLE__
+#include <GLUT/glut.h>    // Second OpenGL library
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif // __APPLE__
+
+#ifdef __linux__
+//#include <GL/gl.h>        // Main OpenGL library
+#include <GL/glut.h>      // Second OpenGL library
+#endif // __linux__
+
+#ifdef _WIN32
+#include <stdio.h>
+#include <stdlib.h>
+#include <GL/glut.h>         // OpenGL library we copied
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif // _WIN32
+
 #include <string>     // To display text on the screen
 #include <cmath>      // for M_PI, sin() and cos()
 #include "point.h"    // Where things are drawn
@@ -33,5 +52,14 @@ void drawCheckerboard(int displayListId);
 int    random(int    min, int    max);
 double random(double min, double max);
 
+
+/// Colors that will be used
+class Color {
+public:
+  static GLfloat MAGENTA[];
+  static GLfloat WHITE[];
+  static GLfloat RED[];
+  static GLfloat GREEN[];
+};
 
 #endif // UI_DRAW_H

@@ -9,20 +9,20 @@
  ************************************************************************/
 
 #include "point.h"
-#include <cassert>
 
 /******************************************
  * POINT : CONSTRUCTOR WITH X,Y
  * Initialize the point to the passed position
  *****************************************/
-Point::Point(float x, float y) : x(0.0), y(0.0)
+Point::Point(float x, float y) : x(0.0), y(0.0), z(0.0)
 {
   setX(x);
   setY(y);
+  setZ(0.0);
 }
 
 /******************************************
- * POINT : CONSTRUCTOR WITH X,Y
+ * POINT : CONSTRUCTOR WITH X,Y,Z
  * Initialize the point to the passed position
  *****************************************/
 Point::Point(float x, float y, float z) : x(0.0), y(0.0), z(0.0)
@@ -32,56 +32,30 @@ Point::Point(float x, float y, float z) : x(0.0), y(0.0), z(0.0)
   setZ(z);
 }
 
-/*******************************************
- * POINT : SET X
- * Set the x position if the value is within range
- *******************************************/
-void Point::setX(float x)
-{
-   this->x = x;
-}
-
-/*******************************************
- * POINT : SET Y
- * Set the y position if the value is within range
- *******************************************/
-void Point::setY(float y)
-{
-   this->y = y;
-}
-
-/*******************************************
- * POINT : SET Z
- * Set the z position if the value is within range
- *******************************************/
-void Point::setZ(float z)
-{
-  this->z = z;
-}
-
 /******************************************
  * POINT insertion
  *       Display coordinates on the screen
  *****************************************/
-std::ostream & operator << (std::ostream & out, const Point & pt)
+std::ostream &
+operator<<(std::ostream & out, const Point & pt)
 {
-   out << "(" << pt.getX() << ", " << pt.getY() << ")";
-   return out;
+  out << "(" << pt.getX() << ", " << pt.getY() << ", " << pt.getZ() << ")";
+  return out;
 }
 
 /*******************************************
  * POINT extraction
  *       Prompt for coordinates
  ******************************************/
-std::istream & operator >> (std::istream & in, Point & pt)
+std::istream &
+operator>>(std::istream & in, Point & pt)
 {
-   float x;
-   float y;
-   in >> x >> y;
+  float x, y, z;
+  in >> x >> y >> z;
 
-   pt.setX(x);
-   pt.setY(y);
+  pt.setX(x);
+  pt.setY(y);
+  pt.setZ(z);
 
-   return in;
+  return in;
 }
-   

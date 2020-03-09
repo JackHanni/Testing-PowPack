@@ -21,12 +21,9 @@ class Point
 {
 public:
   //// constructors
-  Point() : x(0.0), y(0.0) {}
-  Point(bool check) : x(0.0), y(0.0) {}
+  Point() : x(0.0), y(0.0), z(0.0) {}
+//  Point(bool check) : x(0.0), y(0.0), z(0.0) {}
   Point(float x, float y);
-  //// alt constructors
-  //  Point()            : x(0.0), y(0.0), z(0.0) {}
-  //  Point(bool check)  : x(0.0), y(0.0), z(0.0) {}
   Point(float x, float y, float z);
 
   //// getters
@@ -35,9 +32,9 @@ public:
   float getZ() const { return z; }
 
   //// setters
-  void setX(float x);
-  void setY(float y);
-  void setZ(float Z);
+  void setX(float x) { this->x = x; }
+  void setY(float y) { this->y = y; }
+  void setZ(float z) { this->z = z; }
   void addX(float dx) { setX(getX() + dx); }
   void addY(float dy) { setY(getY() + dy); }
   void addZ(float dz) { setZ(getZ() + dz); }
