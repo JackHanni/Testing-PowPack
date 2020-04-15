@@ -5,14 +5,14 @@
 #include "Sphere.h"
 #include "uiDraw.h"
 
-bool Sphere::touching(Sphere sphere)
+bool Sphere::isTouching(Sphere * sphere)
 {
-  double x_diff = sphere.getPoint().getX();
-  double y_diff = sphere.getPoint().getY();
-  double z_diff = sphere.getPoint().getZ();
+  double x_diff = sphere->getPoint().getX();
+  double y_diff = sphere->getPoint().getY();
+  double z_diff = sphere->getPoint().getZ();
   double h = sqrt(x_diff * x_diff + y_diff * y_diff + z_diff * z_diff);
 
-  return h <= radius + sphere.getRadius();
+  return h <= radius + sphere->getRadius();
 }
 
 /**
@@ -20,7 +20,7 @@ bool Sphere::touching(Sphere sphere)
  */
 void Sphere::advance() {
   //// this code should be in Simulator::advance()
-//  if (touching(ball))
+//  if (isTouching(ball))
 //    acc = -0.5;
   velocity += acc * dt;
   p.setY(p.getY() + velocity * dt);

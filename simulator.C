@@ -6,10 +6,13 @@
  *  method bodies for the simulation class.
  *************************************************************/
 
+#include <iostream>
+#include <vector>
+using namespace std;
+using std::vector;
+
 #include "simulator.h"
 #include "uiInteract.h"
-#include <vector>
-using std::vector;
 
 /***************************************
  * SIMULATION :: ADVANCE
@@ -19,12 +22,39 @@ using std::vector;
 void
 Simulator::advance()
 {
-  for (vector<Sphere>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
+  for (auto & sphere : spheres)
   {
-    Sphere * sphere = &(*sphereIterator);
-    //    if (sphere->getPoint().getX())
-    sphere->advance();
+    sphere.advance();
+//    cout << sphere.getVelocity() << endl;
   }
+/// Iterate forward
+//  for (vector<Sphere>::iterator sphereIterator1 = spheres.begin(); sphereIterator1 != spheres.end();
+//       ++sphereIterator1)
+//  {
+//    Sphere * sphere1 = &(*sphereIterator1);
+//
+//    if (((int)(sphere1->getPoint().getY())) <= 0)
+//      continue;
+//    else
+//    {
+//      sphere1->advance();
+//    }
+
+/// Iterate backward
+//    for (vector<Sphere>::reverse_iterator sphereIterator2 = spheres.rbegin(); sphereIterator2 != spheres.rend();
+//         ++sphereIterator2)
+//    {
+//      Sphere * sphere2 = &(*sphereIterator2);
+//
+//      if (((int)(sphere2->getPoint().getY())) <= 0 || sphere1 == sphere2)
+//        continue;
+//
+//      if ((sphere1->isTouching(sphere2)))
+//      {
+//        sphere1->advance();
+//      }
+//    }
+//  }
 }
 
 /***************************************
@@ -62,7 +92,10 @@ Simulator::handleInput(const Interface & ui)
 void
 Simulator::draw(const Interface & ui)
 {
-  for (vector<Sphere>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
+  //  for (auto & sphere : spheres)
+  //    sphere.draw();
+  for (vector<Sphere>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end();
+       ++sphereIterator)
   {
     Sphere * sphere = &(*sphereIterator);
     sphere->draw();
