@@ -9,21 +9,21 @@
 // spotlight at (4, 3, 7).
 class Checkerboard
 {
-  int displayListId;
-  int width;
-  int depth;
+  float displayListId;
+  float width;
+  float depth;
 
 public:
   Checkerboard() : width(8), depth(8) {}
-  Checkerboard(int width, int depth) : width(width), depth(depth) {}
-  int centerX() { return width / 2; }
-  int centerZ() { return depth / 2; }
+  Checkerboard(float width, float depth) : width(width), depth(depth) {}
+  float centerX() { return width / 2; }
+  float centerZ() { return depth / 2; }
 
-  int getDisplayListId() const { return displayListId; }
+  float getDisplayListId() const { return displayListId; }
   void setDisplayListId(int dlID) { displayListId = dlID; }
-  int getWidth() const { return width; }
+  float getWidth() const { return width; }
 //  void setWidth(int width) { Checkerboard::width = width; }
-  int getDepth() const { return depth; }
+  float getDepth() const { return depth; }
 //  void setDepth(int depth) { Checkerboard::depth = depth; }
 
   void draw() { drawCheckerboard(displayListId); }

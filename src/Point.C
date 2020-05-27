@@ -14,23 +14,32 @@
  * POINT : CONSTRUCTOR WITH X,Y
  * Initialize the point to the passed position
  *****************************************/
-Point::Point(float x, float y) : x(0.0), y(0.0), z(0.0)
+Point::Point(float x, float z) : x(0.0), y(0.0), z(0.0)
 {
   setX(x);
-  setY(y);
-  setZ(0.0);
+  setY(0.0);
+  setZ(z);
 }
 
 /******************************************
  * POINT : CONSTRUCTOR WITH X,Y,Z
  * Initialize the point to the passed position
  *****************************************/
-Point::Point(float x, float y, float z) : x(0.0), y(0.0), z(0.0)
+Point::Point(float x, float height, float z) : x(0.0), y(0.0), z(0.0)
 {
   setX(x);
-  setY(y);
+  setY(height);
   setZ(z);
 }
+
+//Point & Point::operator = (const Point & rhs) {
+//  if (this == &rhs)
+//    return *this;
+//  this->x = rhs.x;
+//  this->y = rhs.y;
+//  this->z = rhs.z;
+//  return *this;
+//}
 
 /******************************************
  * POINT insertion

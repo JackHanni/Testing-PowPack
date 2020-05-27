@@ -34,8 +34,11 @@ public:
   float getRadius() { return radius; }
   Point getPoint() { return p; }
   float getVelocity() const { return velocity; }
+  void setVelocity(float v) { velocity = v;    }
+  void setAcceleration(float a) { acc = a; }
 
   bool isTouching(Sphere * sphere);
+  bool isAbove(Sphere * sphere);
   void advance();
   void draw();
 };

@@ -23,15 +23,28 @@ void
 Simulator::advance()
 {
   for (vector<Sphere>::iterator sphereIterator = spheres.begin(); sphereIterator != spheres.end(); ++sphereIterator)
-//  for (auto & sphere : spheres)
   {
     Sphere * sphere = &(*sphereIterator);
-    sphere->advance();
-//    sphere.advance();
-//    cout << sphere.getVelocity() << endl;
+
+    for (vector<Sphere>::iterator sphereCheckIterator = spheres.begin(); sphereCheckIterator != spheres.end(); ++sphereCheckIterator)
+    {
+      if (sphereIterator == sphereCheckIterator)
+        continue;
+
+      Sphere * sphereCheck = &(*sphereCheckIterator);
+
+//      cout << "isTouching: " << (sphere->isTouching(sphereCheck) ? "true\n" : "false\n");
+      if (sphere->isTouching(sphereCheck) && sphere->isAbove(sphereCheck))
+      {
+        sphere->setAcceleration(0.0);
+        sphere->setVelocity(0.0);
+      }
+      else
+        sphere->advance();
+    }
   }
 /// Iterate forward
-//  for (vector<Sphere>::iterator sphereIterator1 = spheres.begin(); sphereIterator1 != spheres.end();
+/*  for (vector<Sphere>::iterator sphereIterator1 = spheres.begin(); sphereIterator1 != spheres.end();
 //       ++sphereIterator1)
 //  {
 //    Sphere * sphere1 = &(*sphereIterator1);
@@ -58,6 +71,7 @@ Simulator::advance()
 //      }
 //    }
 //  }
+ */
 }
 
 /***************************************

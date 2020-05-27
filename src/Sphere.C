@@ -4,36 +4,55 @@
 
 #include "../include/Sphere.h"
 #include "../include/uiDraw.h"
+#include "../include/myTools.h"
 
-bool Sphere::isTouching(Sphere * sphere)
+bool
+Sphere::isTouching(Sphere * sphere)
 {
-  double x_diff = sphere->getPoint().getX();
-  double y_diff = sphere->getPoint().getY();
-  double z_diff = sphere->getPoint().getZ();
-  double h = sqrt(x_diff * x_diff + y_diff * y_diff + z_diff * z_diff);
+  float x = abs(this->p.getX() - sphere->p.getX());
+  float y = abs(this->p.getY() - sphere->p.getY());
+  float z = abs(this->p.getZ() - sphere->p.getZ());
+  float h = sqrt(sq(x) + sq(y) + sq(z));
+  float radii = radius + sphere->radius;
 
-  return h <= radius + sphere->getRadius();
+  /// correct this sphere if h < sum of radii
+  if (h < radii && isAbove(sphere))
+  {
+    float newY = sqrt(sq(radii) - sq(x) - sq(z)) + sphere->p.getY();
+    p.setY(newY);
+    print("here\n");
+  }
+
+  return h <= radii;
+}
+
+bool
+Sphere::isAbove(Sphere * sphere)
+{
+  return this->p.getY() > sphere->p.getY();
 }
 
 /**
  * Updates the values of the Sphere
  */
-void Sphere::advance() {
-  //// this code should be in Simulator::advance()
-//  if (isTouching(ball))
-//    acc = -0.5;
+void
+Sphere::advance()
+{
   velocity += acc * dt;
   p.setY(p.getY() + velocity * dt);
-  if (p.getY() - radius < 0)
+  if (p.getY() - radius <= 0)
   {
     p.setY(radius);
     velocity *= -.8;
   }
 }
 
+
 /**
  * Updates the UI for the Sphere
  */
-void Sphere::draw() {
+void
+Sphere::draw()
+{
   drawSphere(p, radius);
 }
