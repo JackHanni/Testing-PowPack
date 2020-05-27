@@ -39,7 +39,7 @@ using std::string;
 
 int generateGlList(int range);
 void drawSphere(const Point & centerPt, double radius);
-void createCheckerboard(const int width, const int depth, int displayListId);
+void createCheckerboard(const float width, const float depth, int displayListId);
 void drawCheckerboard(int displayListId);
 
 /******************************************************************

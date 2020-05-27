@@ -22,9 +22,8 @@ class Point
 public:
   //// constructors
   Point() : x(0.0), y(0.0), z(0.0) {}
-//  Point(bool check) : x(0.0), y(0.0), z(0.0) {}
-  Point(float x, float y);
-  Point(float x, float y, float z);
+  Point(float x, float z);
+  Point(float x, float height, float z);
 
   //// getters
   float getX() const { return x; }
@@ -35,9 +34,11 @@ public:
   void setX(float x) { this->x = x; }
   void setY(float y) { this->y = y; }
   void setZ(float z) { this->z = z; }
-  void addX(float dx) { setX(getX() + dx); }
-  void addY(float dy) { setY(getY() + dy); }
-  void addZ(float dz) { setZ(getZ() + dz); }
+  void addX(float dx) { x += + dx; }
+  void addY(float dy) { y += + dy; }
+  void addZ(float dz) { z += + dz; }
+
+//  Point & operator = (const Point & rhs);
 
 private:
   float x; //// width position
@@ -49,4 +50,4 @@ private:
 std::ostream & operator<<(std::ostream & out, const Point & pt);
 std::istream & operator>>(std::istream & in, Point & pt);
 
-#endif // POINT_H
+#endif /// POINT_H
