@@ -4,7 +4,6 @@
 CMakeLists.txt
 .clang-format
 .DS_Store
-myTools**
 cmake-build-debug/
 .idea/
 llvm-9.0.1.src/
