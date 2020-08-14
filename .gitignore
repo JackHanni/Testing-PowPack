@@ -2,10 +2,10 @@
 **.out
 **.o
 CMakeLists.txt
-.clang-format
 .DS_Store
 cmake-build-debug/
 .idea/
 llvm-9.0.1.src/
 packingBalls/
 .makefileObjects/
+myTools.**

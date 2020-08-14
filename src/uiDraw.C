@@ -60,16 +60,16 @@ void drawSphere(const Point & centerPt, double radius)
 }
 
 ///
-void createCheckerboard(const int width, const int depth, int displayListId)
+void createCheckerboard(const float width, const float depth, int displayListId)
 {
   glNewList(displayListId, GL_COMPILE);
   GLfloat lightPosition[] = {4, 3, 7, 1};
   glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
   glBegin(GL_QUADS);
   glNormal3d(0, 1, 0);
-  for (int x = 0; x < width - 1; x++)
+  for (int x = 0; x < width; x++)
   {
-    for (int z = 0; z < depth - 1; z++)
+    for (int z = 0; z < depth; z++)
     {
       glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (x + z) % 2 == 0 ? Color::RED : Color::WHITE);
       glVertex3d(x, 0, z);

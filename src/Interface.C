@@ -298,7 +298,8 @@ int Interface::isLeftPress = 0;
 int Interface::isRightPress = 0;
 bool Interface::isSpacePress = false;
 bool Interface::initialized = false;
-double Interface::timePeriod = 1.0 / 60; // default to 60 frames/second
+/// NOTE: change denominator to change frame rate (slow it down)
+double Interface::timePeriod = 1.0 / 5; // default to 60 frames/second
 unsigned int Interface::nextTick = 0;    // redraw now please
 void * Interface::p = NULL;
 void * Interface::camera = NULL;
@@ -340,10 +341,9 @@ Interface::initialize(int argc, char ** argv, const char * title, Point topLeft,
 
   // create the window
   glutInit(&argc, argv);
-//  Point point;
   glutInitWindowSize( // size of the window
       (int)(bottomRight.getX() - topLeft.getX()),
-      (int)(topLeft.getY() - bottomRight.getY()));
+      (int)(topLeft.getZ() - bottomRight.getZ()));
 
   glutInitWindowPosition(80, 80);                           // initial position
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // triple buffering
