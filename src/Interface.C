@@ -310,10 +310,13 @@ void (*Interface::callBack)(const Interface *, void *) = NULL;
  ***********************************************************************/
 #ifdef __APPLE__
 Interface::~Interface() = default;
-#endif
+#endif // __APPLE__
 #ifdef __linux__
 Interface::~Interface() {}
-#endif
+#endif // __linux__
+#ifdef _WIN32
+Interface::~Interface() {}
+#endif // _WIN32
 
 /************************************************************************
  * INTEFACE : INITIALIZE
