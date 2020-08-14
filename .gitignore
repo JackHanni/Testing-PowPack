@@ -2,7 +2,6 @@
 **.out
 **.o
 CMakeLists.txt
-.clang-format
 .DS_Store
 cmake-build-debug/
 .idea/
